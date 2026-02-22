@@ -46,7 +46,7 @@ function normalizeCoordinates(lat, lng) {
     let normalizedCoords = normalizeCoordinates(preMarkerInfo.latitude, preMarkerInfo.longitude)
     var userInput = `${preMarkerInfo.currentTime}: ( ${normalizedCoords.lat},  ${normalizedCoords.lng} )`
 
-    const response = await fetch('http://localhost:4000/chat', {
+    const response = await fetch('https://setrise-backend.onrender.com/chat', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -129,7 +129,7 @@ function LocationMarker() {
 
 
 async function addToHistory(currentLocation, message) {
-    fetch('http://localhost:4000/add', {
+    fetch('https://setrise-backend.onrender.com/add', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'

@@ -6,7 +6,7 @@ function History() {
     const [messages, setMessages] = useState([])
 
     useEffect(() => {
-        fetch('http://localhost:4000/logs')
+        fetch('https://setrise-backend.onrender.com/logs')
             .then(res => res.json())
             .then(data => {
                 let newMessages = []
