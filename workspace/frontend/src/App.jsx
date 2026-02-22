@@ -22,7 +22,6 @@ class PreMarkerInfo {
         const fixedCoordinates = locationInfo.latlng
         this.latitude = fixedCoordinates.lat
         this.longitude = fixedCoordinates.lng
-        console.log(this.latitude); console.log(this.longitude)
       
         this.sunrise = getSunrise(this.latitude, this.longitude).toLocaleTimeString() // strings
         this.sunset = getSunset(this.latitude, this.longitude).toLocaleTimeString() 
@@ -82,7 +81,7 @@ function LocationMarker() {
         setMarkerInfo(_markerInfo) 
         sessionStorage.setItem('markerInfo', JSON.stringify(_markerInfo)) // persist data across refreshes
 
-        console.log(_markerInfo)
+        setPostInfo({'place': 'Loading...'}) // set loading message while we wait for the response
         requestInformation(_markerInfo).then(
             response => {
                 setPostInfo(response) // sets the json response

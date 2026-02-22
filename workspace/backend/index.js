@@ -2,7 +2,7 @@ import express, { response } from 'express'
 import cors from 'cors'
 import bodyParser from 'body-parser'
 import dotenv from 'dotenv'
-import { GoogleGenerativeAI } from '@google/generative-ai'
+import { GoogleGenAI } from '@google/genai'
 import { MongoClient } from 'mongodb'
 
 dotenv.config()
@@ -20,23 +20,31 @@ mongoclient.connect().then(() => {
     console.log("Connected to MongoDB")
 })
 
-const genAI = new GoogleGenerativeAI(process.env.API_KEY)
-const model = genAI.getGenerativeModel({
-    model: "gemini-1.5-flash",
-    systemInstruction: `Given a current time, the latitude, and longitude, return in JSON format that contains the following:
-    another place with a similar sunset and sunrise time, and an interesting fact about such place. The longitude
-    must differ from the initial location substantially. The keys must exist: place (name of the location that is returned), 
-    interesting_fact (a random fun fact that exists at the returned location).`,
-})
+const genAI = new GoogleGenAI({})
+
+function generatePrompt(content) {
+    return genAI.models.generateContent({
+        model: 'gemini-2.5-flash-lite',
+        contents: content,
+        config: {
+            systemInstruction: `Given a current time, the latitude, and longitude, return in JSON format that contains the following: 
+            another place with a similar sunset and sunrise time, and an interesting fact about such place. The longitude
+            must differ from the initial location substantially. The keys must exist: place (name of the location that is returned), 
+            interesting_fact (a random fun fact that exists at the returned location). DO NOT LOG ANY OTHER TEXT EXCEPT THE JSON`,
+        }
+    });
+}
+
 
 app.post('/chat', async (req, res) => {
     const userInput = req.body.userInput
     let responseMessage
-
     try {
-        const result = await model.generateContent(userInput)
-        responseMessage = result.response.text()
+        const result = await generatePrompt(userInput)
+        console.log(result.text)
+        responseMessage = result.text
     } catch(e) {
+        console.log(e)
         responseMessage = 'Oops, something went wrong!'
     }
     res.json({

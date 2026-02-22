@@ -14,6 +14,8 @@ function CustomPopup({currentLocation, suntimes, jsonResponse}) {
         shadowSize: [41, 41]
       });
 
+    console.log(currentLocation, jsonResponse, suntimes)
+
     return (
         <>   
         <Marker position={currentLocation} icon = {blackIcon}>
